@@ -5,10 +5,10 @@ The main focus of this script was user having a user friendly interface,</br>
 to perform Nmap scans with.
 
 # Installation
-Simply clone the repository and install the following packages via pip:
+Simply clone the repository</br>
+Install nmap and the following packages via pip:
 - python3-nmap or nmap3
 - termtables
-</br>On top of that, it obviously needs Nmap to be installed.
 
 # Background
 The reason i made this project was zAnti,</br>
