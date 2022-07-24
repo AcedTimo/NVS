@@ -8,6 +8,7 @@ to perform Nmap scans with.
 Simply clone the repository and install the following packages via pip:
 - python3-nmap or nmap3
 - termtables
+On top of that, it obviously needs Nmap to be installed.
 
 # Background
 The reason i made this project was zAnti,</br>
