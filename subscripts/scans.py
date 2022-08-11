@@ -1,5 +1,4 @@
 import time
-
 import nmap3
 import subscripts.misc
 import subscripts.menus
@@ -59,9 +58,6 @@ def digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVul
             return
     except:
         x=0
-
-    scannedHostsList = []
-    # Instead of only getting specific data we should get everything we can and save it inside the list
 
     for resultDict in scanData:
         if resultDict == subscripts.misc.getIP() or resultDict == "stats" or resultDict == "runtime":
@@ -196,9 +192,6 @@ def digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVul
             "macVendor": macVendor,
             "portList": portList
         }
-
-
-        # if "subscripts.menus.scannedHostsList" contains the scanned ip, remove it from the list and add the new data
 
         for host in subscripts.menus.scannedHostsList:
             if host["ipAddress"] == ipAddress:
