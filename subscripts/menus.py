@@ -72,11 +72,11 @@ def settings():
     global allTCP, allUDP, detectOS, detectServices, detectVulns
 
     print("Settings")
-    print(str("[1] All TCP Ports             [{}]").format(allTCP))
-    print(str("[2] All UDP Ports             [{}]").format(allUDP))
-    print(str("[3] OS Detection              [{}]").format(detectOS))
-    print(str("[4] Service Version Detection [{}]").format(detectServices))
-    print(str("[5] Vulnerability Detection   [{}]").format(detectVulns))
+    print(f"[1] All TCP Ports             [{allTCP}]")
+    print(f"[2] All UDP Ports             [{allUDP}]")
+    print(f"[3] OS Detection              [{detectOS}]")
+    print(f"[4] Service Version Detection [{detectServices}]")
+    print(f"[5] Vulnerability Detection   [{detectVulns}]")
     print("Press return to go back to the Main Menu")
 
     selection = input("Input: ")
