@@ -3,27 +3,32 @@ import nmap3
 import subscripts.misc
 import subscripts.menus
 
-def buildArguments(allTCP, allUDP, detectOS, detectServices, detectVulns):
+def buildArguments():
     arguments = ""
+    menus = subscripts.menus
 
-    if not allTCP and not allUDP and not detectOS and not detectServices and not detectVulns:
+    if not menus.allTCP and not menus.allUDP and not menus.detectOS and not menus.detectServices and not menus.detectVulns and not menus.excludeThisDevice:
         arguments = "none"
         return arguments
 
-    if allTCP and allUDP:
+    if menus.allTCP and menus.allUDP:
         arguments += "-sU -sT -p- -T5 "
     else:
-        if allTCP:
+        if menus.allTCP:
             arguments += "-p- -T5 "
-        if allUDP:
+        if menus.allUDP:
             arguments += "-sU -p- -T5 "
     
-    if detectOS:
+    if menus.detectOS:
         arguments += "-O "
-    if detectServices:
+    if menus.detectServices:
         arguments += "-sV "
-    if detectVulns:
-        arguments += "-sV --script=vuln"
+    if menus.detectVulns:
+        arguments += "-sV --script=vuln "
+
+    if menus.excludeThisDevice:
+        ipAddress = subscripts.misc.getIP()
+        arguments += f"--exclude {ipAddress}"
     
     return arguments.rstrip()
 
@@ -46,7 +51,7 @@ def startScan(target, arguments):
 
     return result
 
-def digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVulns):
+def digestScanData(scanData):
     try:
         if scanData["runtime"]["exit"] != "success":
             print("The scan failed. Check the data below.")
@@ -60,7 +65,7 @@ def digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVul
         x=0
 
     for resultDict in scanData:
-        if resultDict == subscripts.misc.getIP() or resultDict == "stats" or resultDict == "runtime":
+        if resultDict == "stats" or resultDict == "runtime":
             continue
 
         ipAddress = resultDict
@@ -155,10 +160,15 @@ def digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVul
                     rawVulnString = portInfo["scripts"][0]["raw"]
                     rawVulnLines = rawVulnString.split("\n")
                     for vuln in rawVulnLines:
-                        if str.__contains__(vuln, "\t*EXPLOIT*"):
+                        if not subscripts.menus.onlyShowExploits or str.__contains__(vuln, "\t*EXPLOIT*"):
                             vulnInfo = vuln.replace("\t", " ")
-                            vulnInfo = vulnInfo.replace("*EXPLOIT*", "")
                             vulnInfo = vulnInfo.lstrip().rstrip()
+
+                        if not subscripts.menus.onlyShowExploits:
+                            vulnList.append(vulnInfo)
+                            continue
+                        if str.__contains__(vuln, "\t*EXPLOIT*"):
+                            vulnInfo = vulnInfo.replace("*EXPLOIT*", "")
                             vulnList.append(vulnInfo)
                 except:
                     x = 0

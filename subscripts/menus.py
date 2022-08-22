@@ -11,9 +11,11 @@ allUDP = False
 detectOS = False
 detectServices = False
 detectVulns = False
+onlyShowExploits = True
+excludeThisDevice = True
 # ------------------
 
-scannedHostsList = []  # Fix crash on OS scan when running without root
+scannedHostsList = []
 
 def mainMenu():
     subscripts.misc.clearConsole()
@@ -69,7 +71,7 @@ def mainMenu():
 
 def settings():
     subscripts.misc.clearConsole()
-    global allTCP, allUDP, detectOS, detectServices, detectVulns
+    global allTCP, allUDP, detectOS, detectServices, detectVulns, onlyShowExploits, excludeThisDevice
 
     print("Settings")
     print(f"[1] All TCP Ports             [{allTCP}]")
@@ -77,6 +79,8 @@ def settings():
     print(f"[3] OS Detection              [{detectOS}]")
     print(f"[4] Service Version Detection [{detectServices}]")
     print(f"[5] Vulnerability Detection   [{detectVulns}]")
+    print(f"[6] Only Show Exploits        [{onlyShowExploits}]")
+    print(f"[7] Exclude This Device       [{excludeThisDevice}]")
     print("Press return to go back to the Main Menu")
 
     selection = input("Input: ")
@@ -111,6 +115,18 @@ def settings():
         else:
             detectVulns = True
         return True
+    if selection == "6":
+        if onlyShowExploits:
+            onlyShowExploits = False
+        else:
+            onlyShowExploits = True
+        return True
+    if selection == "7":
+        if excludeThisDevice:
+            excludeThisDevice = False
+        else:
+            excludeThisDevice = True
+        return True
     if selection == "":
         return False
 
@@ -129,18 +145,18 @@ def specificTarget():
     if target == "":
         return
 
-    arguments = subscripts.scans.buildArguments(allTCP, allUDP, detectOS, detectServices, detectVulns)
+    arguments = subscripts.scans.buildArguments()
     scanData = subscripts.scans.startScan(target, arguments)
     if scanData != "":
-        subscripts.scans.digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVulns)
+        subscripts.scans.digestScanData(scanData)
     return
 
 def entireLocalNetwork():
     ipRange = subscripts.misc.getIpRange()
-    arguments = subscripts.scans.buildArguments(allTCP, allUDP, detectOS, detectServices, detectVulns)
+    arguments = subscripts.scans.buildArguments()
     scanData = subscripts.scans.startScan(ipRange, arguments)
     if scanData != "":
-        subscripts.scans.digestScanData(scanData, allTCP, allUDP, detectOS, detectServices, detectVulns)
+        subscripts.scans.digestScanData(scanData)
     return
 
 def scannedHosts():
