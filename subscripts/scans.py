@@ -1,7 +1,7 @@
-import time
 import nmap3
 import subscripts.misc
 import subscripts.menus
+
 
 def buildArguments():
     arguments = ""
@@ -18,7 +18,7 @@ def buildArguments():
             arguments += "-p- -T5 "
         if menus.allUDP:
             arguments += "-sU -p- -T5 "
-    
+
     if menus.detectOS:
         arguments += "-O "
     if menus.detectServices:
@@ -29,8 +29,9 @@ def buildArguments():
     if menus.excludeThisDevice:
         ipAddress = subscripts.misc.getIP()
         arguments += f"--exclude {ipAddress}"
-    
+
     return arguments.rstrip()
+
 
 def startScan(target, arguments):
     print("\nStarting a scan on target: '" + target + "' with arguments:'" + arguments + "'")
@@ -39,30 +40,47 @@ def startScan(target, arguments):
     nmap = nmap3.Nmap()
     try:
         result = nmap.scan_top_ports(target=target, args=arguments)
-        print("\nScan finished")
-        time.sleep(2)
     except Exception as e:
         if str(e).__contains__("requires root privileges"):
             print("Insufficient Privileges. Try running the script as root")
-            time.sleep(4)
+            input("Press return to go back to the Main Menu")
             return result
         print("An Exception occurred: \n" + str(e))
-        time.sleep(4)
+        input("Press return to go back to the Main Menu")
 
-    return result
+    if result != "":
+        digestScanData(result)
+
 
 def digestScanData(scanData):
     try:
         if scanData["runtime"]["exit"] != "success":
             print("The scan failed. Check the data below.")
             print(scanData)
-            input("PAUSED")
+            input("Press return to go back to the Main Menu")
             return
         if len(scanData) == 2:
-            print("The host machine was unreachable")
+            argsList = scanData["stats"]["args"].split(" ")
+            ipAddress = argsList[len(argsList) - 1]
+
+            hostDict = {
+                "ipAddress": ipAddress,
+                "hostname": "",
+                "deviceState": "down",
+                "osName": "",
+                "accuracy": "",
+                "osType": "",
+                "osVendor": "",
+                "osFamily": "",
+                "osGen": "",
+                "macAddress": "",
+                "macVendor": "",
+                "portList": []
+            }
+            subscripts.menus.scannedHostsList.append(hostDict)
             return
     except:
-        x=0
+        x = 0
 
     for resultDict in scanData:
         if resultDict == "stats" or resultDict == "runtime":
