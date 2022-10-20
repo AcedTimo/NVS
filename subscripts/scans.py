@@ -7,9 +7,8 @@ def buildArguments():
     arguments = ""
     menus = subscripts.menus
 
-    if not menus.allTCP and not menus.allUDP and not menus.detectOS and not menus.detectServices and not menus.detectVulns and not menus.excludeThisDevice:
-        arguments = "none"
-        return arguments
+    if not menus.allTCP and not menus.allUDP and not menus.detectOS and not menus.detectServices and not menus.detectVulns:
+        arguments += "-sn "
 
     if menus.allTCP and menus.allUDP:
         arguments += "-sU -sT -p- -T5 "
@@ -141,6 +140,9 @@ def digestScanData(scanData):
         portList = []
         try:
             for portInfo in scanData[resultDict]["ports"]:
+                if subscripts.menus.onlyShowOpenPorts and not portInfo["state"].__contains__("open"):
+                    continue
+
                 serviceName = ""
                 product = ""
                 extraInfo = ""
