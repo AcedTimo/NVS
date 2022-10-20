@@ -12,6 +12,7 @@ allUDP = False
 detectOS = False
 detectServices = False
 detectVulns = False
+onlyShowOpenPorts = True
 onlyShowExploits = True
 excludeThisDevice = True
 # ------------------
@@ -74,7 +75,7 @@ def mainMenu():
 
 def settings():
     subscripts.misc.clearConsole()
-    global allTCP, allUDP, detectOS, detectServices, detectVulns, onlyShowExploits, excludeThisDevice
+    global allTCP, allUDP, detectOS, detectServices, detectVulns, onlyShowOpenPorts, onlyShowExploits, excludeThisDevice
 
     print("Settings")
     print(f"[1] All TCP Ports             [{allTCP}]")
@@ -82,53 +83,36 @@ def settings():
     print(f"[3] OS Detection              [{detectOS}]")
     print(f"[4] Service Version Detection [{detectServices}]")
     print(f"[5] Vulnerability Detection   [{detectVulns}]")
-    print(f"[6] Only Show Exploits        [{onlyShowExploits}]")
-    print(f"[7] Exclude This Device       [{excludeThisDevice}]")
+    print(f"[6] Only Show Open Ports      [{onlyShowOpenPorts}]")
+    print(f"[7] Only Show Exploits        [{onlyShowExploits}]")
+    print(f"[8] Exclude This Device       [{excludeThisDevice}]")
     print("Press return to go back to the Main Menu")
 
     selection = input("Input: ")
 
     if selection == "1":
-        if allTCP:
-            allTCP = False
-        else:
-            allTCP = True
+        allTCP = not allTCP
         return True
     if selection == "2":
-        if allUDP:
-            allUDP = False
-        else:
-            allUDP = True
+        allUDP = not allUDP
         return True
     if selection == "3":
-        if detectOS:
-            detectOS = False
-        else:
-            detectOS = True
+        detectOS = not detectOS
         return True
     if selection == "4":
-        if detectServices:
-            detectServices = False
-        else:
-            detectServices = True
+        detectServices = not detectServices
         return True
     if selection == "5":
-        if detectVulns:
-            detectVulns = False
-        else:
-            detectVulns = True
+        detectVulns = not detectVulns
         return True
     if selection == "6":
-        if onlyShowExploits:
-            onlyShowExploits = False
-        else:
-            onlyShowExploits = True
+        onlyShowOpenPorts = not onlyShowOpenPorts
         return True
     if selection == "7":
-        if excludeThisDevice:
-            excludeThisDevice = False
-        else:
-            excludeThisDevice = True
+        onlyShowExploits = not onlyShowExploits
+        return True
+    if selection == "8":
+        excludeThisDevice = not excludeThisDevice
         return True
     if selection == "":
         return False
@@ -170,6 +154,7 @@ def specificTarget():
 
 
 def entireLocalNetwork():
+    subscripts.misc.clearConsole()
     ipRange = subscripts.misc.getIpRange()
     arguments = subscripts.scans.buildArguments()
     subscripts.scans.startScan(ipRange, arguments)
