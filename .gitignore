@@ -1,4 +1,5 @@
 # Ignore the virtual environment set up by PyCharm
 venv/
 .idea
+subscripts/__pycache__
 *.session
